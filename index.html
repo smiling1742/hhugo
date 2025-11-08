@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青春华章，百十河海 - 河海大学110周年校庆</title>
+    <meta name="description" content="河海大学110周年校庆官方网站，展现百年水利学府的历史传承、学科特色和青春活力">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    
+    <!-- Animation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        :root {
+            --primary-blue: #003B6F;
+            --secondary-blue: #4A90A4;
+            --accent-orange: #E67E22;
+            --text-dark: #2C3E50;
+            --text-light: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+        
+        .font-decorative {
+            font-family: 'ZCOOL KuaiLe', cursive;
+        }
+        
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-orange);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-orange);
+            border-radius: 1px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 50%, var(--primary-blue) 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: url('resources/water-dam.svg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        #water-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--text-light);
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #a8e6cf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .motto-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .motto-text {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            font-weight: 500;
+            letter-spacing: 2px;
+            line-height: 1.8;
+        }
+        
+        /* Timeline Section */
+        .timeline-section {
+            padding: 6rem 0;
+            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-blue), var(--secondary-blue));
+            border-radius: 2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin: 3rem 0;
+            width: 50%;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 3rem;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 3rem;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            top: 1rem;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-orange);
+            border: 4px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px var(--primary-blue);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-marker {
+            right: -13px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-marker {
+            left: -13px;
+        }
+        
+        .timeline-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        /* Quick Navigation */
+        .quick-nav {
+            padding: 4rem 0;
+            background: white;
+        }
+        
+        .nav-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .nav-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 20px 40px rgba(0,59,111,0.1);
+        }
+        
+        .nav-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--primary-blue);
+            color: var(--text-light);
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .scroll-animate.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 2rem;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding-left: 4rem !important;
+                padding-right: 1rem !important;
+            }
+            
+            .timeline-marker {
+                left: 1.1rem !important;
+            }
+            
+            .hero-content {
+                padding: 0 1rem;
+            }
+            
+            .motto-section {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Navigation Toggle for Mobile */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .nav-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: var(--primary-blue);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                transition: 0.3s;
+                padding-top: 2rem;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-white text-xl font-bold">
+                    河海大学110周年校庆
+                </div>
+                
+                <div class="nav-toggle md:hidden">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                
+                <ul class="nav-menu flex space-x-8 md:space-x-6">
+                    <li><a href="index.html" class="nav-link text-white hover:text-orange-300 transition-colors">首页</a></li>
+                    <li><a href="heritage.html" class="nav-link text-white hover:text-orange-300 transition-colors">水利传承</a></li>
+                    <li><a href="campus-life.html" class="nav-link text-white hover:text-orange-300 transition-colors">校园生活</a></li>
+                    <li><a href="future.html" class="nav-link text-white hover:text-orange-300 transition-colors">未来展望</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-bg"></div>
+        <canvas id="water-canvas"></canvas>
+        
+        <div class="hero-content fade-in">
+            <h1 class="hero-title font-serif">青春华章，百十河海</h1>
+            <p class="hero-subtitle">河海大学110周年校庆 · 1915-2025</p>
+            
+            <div class="motto-section">
+                <p class="motto-text font-serif">艰苦朴素 · 实事求是 · 严格要求 · 勇于探索</p>
+                <p class="text-sm mt-2 opacity-80">—— 河海大学校训</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section scroll-animate">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-blue-900 mb-4 font-serif">百十历程</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    从1915年到2025年，河海大学走过了110年的辉煌历程，见证了中国水利事业的发展与壮大
+                </p>
+            </div>
+            
+            <div class="timeline" id="timeline">
+                <!-- Timeline items will be generated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Navigation -->
+    <section class="quick-nav scroll-animate">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-blue-900 mb-4 font-serif">探索河海</h2>
+                <p class="text-lg text-gray-600">深入了解河海大学的历史传承、校园生活和未来发展</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <a href="heritage.html" class="nav-card block group">
+                    <div class="nav-icon">
+                        <span class="text-3xl">🏛️</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-blue-900 mb-3">水利传承</h3>
+                    <p class="text-gray-600 mb-4">深入了解河海大学水利学科的深厚底蕴和历史传承，探索中国水利教育的发展历程</p>
+                    <span class="text-blue-600 font-medium group-hover:text-orange-600 transition-colors">
+                        了解更多 →
+                    </span>
+                </a>
+                
+                <a href="campus-life.html" class="nav-card block group">
+                    <div class="nav-icon">
+                        <span class="text-3xl">🎓</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-blue-900 mb-3">校园生活</h3>
+                    <p class="text-gray-600 mb-4">感受河海学子的青春活力和丰富多彩的校园生活，体验百年学府的现代气息</p>
+                    <span class="text-blue-600 font-medium group-hover:text-orange-600 transition-colors">
+                        了解更多 →
+                    </span>
+                </a>
+                
+                <a href="future.html" class="nav-card block group">
+                    <div class="nav-icon">
+                        <span class="text-3xl">🚀</span>
+                    </div>
+                    <h3 class="text-xl font-semibold text-blue-900 mb-3">未来展望</h3>
+                    <p class="text-gray-600 mb-4">展望河海大学的发展愿景和规划，了解学校迈向世界一流特色研究型大学的征程</p>
+                    <span class="text-blue-600 font-medium group-hover:text-orange-600 transition-colors">
+                        了解更多 →
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <div class="mb-4">
+                <p class="text-lg font-serif">艰苦朴素 · 实事求是 · 严格要求 · 勇于探索</p>
+                <p class="text-sm mt-2 opacity-80">河海大学校训 · 传承百年精神</p>
+            </div>
+            <div class="border-t border-blue-800 pt-4">
+                <p class="text-sm opacity-70">
+                    © 2025 河海大学110周年校庆 | 联系方式：hhu110@hhu.edu.cn | 地址：江苏省南京市鼓楼区西康路1号
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>
